@@ -8,15 +8,10 @@ const int height = 20;
 int snakeX = width/2;
 int snakeY = height/2;
 bool gameover;
-
-
-void start(){
-    gameover=false;
-    
-
-
-}
-void draw(){
+int sDir;
+WINDOW * win;
+int snakeXmv = snakeX;
+/*void draw(){
 //Change "clear" to "cls" if compiling for Windows
     system("clear");
 for(int i=0; i<width; i++){
@@ -38,12 +33,32 @@ for(int i=0; i<width; i++){
     cout << "#";
 }
 cout<<endl;
+}*/
+
+
+void start(){
+    gameover=false;
+    }
+
+void UserInput(int sDir){
+    nodelay(stdscr, TRUE);
+    sDir = getch();
+}
+
+void RenderField(WINDOW * win, int height, int width){
+    initscr();
+    noecho();
+    curs_set(0);
+    win = newwin(height, width, 0, 0);
+    refresh();
+    box(win, 0, 0);
+    mvwprintw(win,snakeY,snakeXmv,"o");
+    wrefresh(win);
+    getch();
+    endwin();
 }
 
 void GameUpdate(int sDir, int snakeXmv, WINDOW * win){
-sDir = getch();
-//printw("%d", sDir);
-
 switch(sDir){
 case 97:
     for(int i; i < snakeX; snakeXmv--){
@@ -51,8 +66,6 @@ case 97:
         mvwprintw(win,snakeY,snakeXmv+1," ");
         wrefresh(win);
         this_thread::sleep_for(chrono::milliseconds(1000));
-        nodelay(stdscr,TRUE);
-        sDir = getch();
         if(sDir != 97){
             break;}
         }
@@ -63,8 +76,6 @@ case 100:
         mvwprintw(win,snakeY,snakeXmv-1," ");
         wrefresh(win);
         this_thread::sleep_for(chrono::milliseconds(1000));
-        nodelay(stdscr,TRUE);
-        sDir = getch();
         if(sDir != 100){
             break;}
         }
@@ -72,24 +83,15 @@ case 100:
 }
 
 int main(){
-int snakeXmv = snakeX;
 start();
-//nodelay(stdscr, TRUE);
 
 while(!gameover){
-    initscr();
-    noecho();
-    curs_set(0);
-    WINDOW * win = newwin(height, width, 0, 0);
-    refresh();
-    box(win, 0, 0);
-    mvwprintw(win,snakeY,snakeXmv,"o");
-    wrefresh(win);
-    int sDir;
+    UserInput(sDir);
+    printw("%d", sDir);
+    RenderField(win, height, width);
     GameUpdate(sDir, snakeXmv, win);
     //cout << snakeXmv << endl;
-    getch();
-    endwin();
+    
 }
 
 
