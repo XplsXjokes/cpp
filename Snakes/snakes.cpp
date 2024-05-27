@@ -5,12 +5,13 @@
 using namespace std;
 const int width = 80;
 const int height = 20;
-int snakeX = width/2;
-int snakeY = height/2;
+int X = width/2;
+int Y = height/2;
 bool gameover;
 int sDir;
 WINDOW * win;
-int snakeXmv = snakeX;
+int snakeXmv = X;
+int snakeYmv = Y;
 /*void draw(){
 //Change "clear" to "cls" if compiling for Windows
     system("clear");
@@ -52,7 +53,7 @@ void RenderField(WINDOW * win, int height, int width){
     win = newwin(height, width, 0, 0);
     refresh();
     box(win, 0, 0);
-    mvwprintw(win,snakeY,snakeXmv,"o");
+    mvwprintw(win,Y,snakeXmv,"o");
     wrefresh(win);
     getch();
     endwin();
@@ -61,9 +62,10 @@ void RenderField(WINDOW * win, int height, int width){
 void GameUpdate(int sDir, int snakeXmv, WINDOW * win){
 switch(sDir){
 case 97:
-    for(int i; i < snakeX; snakeXmv--){
-        mvwprintw(win,snakeY,snakeXmv,"o");
-        mvwprintw(win,snakeY,snakeXmv+1," ");
+    for(int i = X; i <= 0; i--){
+        snakeXmv--;
+        mvwprintw(win,Y,snakeXmv,"o");
+        mvwprintw(win,Y,snakeXmv+1," ");
         wrefresh(win);
         this_thread::sleep_for(chrono::milliseconds(1000));
         if(sDir != 97){
@@ -71,9 +73,10 @@ case 97:
         }
     
 case 100:
-    for(int i; i < snakeX; snakeXmv++){
-        mvwprintw(win,snakeY,snakeXmv,"o");
-        mvwprintw(win,snakeY,snakeXmv-1," ");
+    for(int i = X; i <= 80; i++){
+        snakeXmv++;
+        mvwprintw(win,Y,snakeXmv,"o");
+        mvwprintw(win,Y,snakeXmv-1," ");
         wrefresh(win);
         this_thread::sleep_for(chrono::milliseconds(1000));
         if(sDir != 100){
