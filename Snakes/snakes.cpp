@@ -44,6 +44,7 @@ void start(){
 void UserInput(int sDir){
     nodelay(stdscr, TRUE);
     sDir = getch();
+    printw("%d",sDir);
 }
 
 void RenderField(WINDOW * win, int height, int width){
@@ -55,14 +56,13 @@ void RenderField(WINDOW * win, int height, int width){
     box(win, 0, 0);
     mvwprintw(win,Y,snakeXmv,"o");
     wrefresh(win);
-    getch();
-    endwin();
 }
 
-void GameUpdate(int sDir, int snakeXmv, WINDOW * win){
+void GameUpdate(int sDir,int Y, int snakeXmv, WINDOW * win){
+
 switch(sDir){
 case 97:
-    for(int i = X; i <= 0; i--){
+    for(int i = X; i >= 0; i--){
         snakeXmv--;
         mvwprintw(win,Y,snakeXmv,"o");
         mvwprintw(win,Y,snakeXmv+1," ");
@@ -83,6 +83,7 @@ case 100:
             break;}
         }
     }
+
 }
 
 int main(){
@@ -90,10 +91,20 @@ start();
 
 while(!gameover){
     UserInput(sDir);
-    printw("%d", sDir);
-    RenderField(win, height, width);
-    GameUpdate(sDir, snakeXmv, win);
+    //RenderField(win, height, width);
+    initscr();
+    noecho();
+    curs_set(0);
+    win = newwin(height, width, 0, 0);
+    refresh();
+    box(win, 0, 0);
+    mvwprintw(win,Y,snakeXmv,"o");
+    wrefresh(win);
+    GameUpdate(sDir, Y, snakeXmv, win);
     //cout << snakeXmv << endl;
+    getch();
+    endwin();
+   
     
 }
 
