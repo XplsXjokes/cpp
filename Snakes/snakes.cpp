@@ -2,16 +2,18 @@
 #include <cstdlib>
 #include <ncurses.h>
 #include <thread>
+
 using namespace std;
+
 const int width = 80;
 const int height = 20;
 int X = width/2;
 int Y = height/2;
+int sDir = 0;
+signed int score = -1;
 bool gameover;
-int sDir;
 WINDOW * win;
-int snakeXmv = X;
-int snakeYmv = Y;
+WINDOW * win2;
 /*void draw(){
 //Change "clear" to "cls" if compiling for Windows
     system("clear");
@@ -40,76 +42,111 @@ cout<<endl;
 void start(){
     gameover=false;
     }
-
-void UserInput(int sDir){
-    nodelay(stdscr, TRUE);
-    sDir = getch();
-    printw("%d",sDir);
-}
-
-void RenderField(WINDOW * win, int height, int width){
+void gover(){
     initscr();
     noecho();
     curs_set(0);
     win = newwin(height, width, 0, 0);
     refresh();
     box(win, 0, 0);
-    mvwprintw(win,Y,snakeXmv,"o");
+    mvwprintw(win,Y,X-5,"GAME OVER");
     wrefresh(win);
+    wgetch(win);
+    endwin();
+
 }
 
-void GameUpdate(int sDir,int Y, int snakeXmv, WINDOW * win){
+void UserInput(int tmpv) {
+    nodelay(stdscr, TRUE);
+    tmpv = getch();
+    if (tmpv != ERR) {
+        sDir = tmpv;
+    }
+}
+
+void fruit(int fX, int fY){
+    if (score == -1 || (fX == X && fY == Y)){
+        score++;
+        fX = 3 + (rand() % 75);
+        fY = 3 + (rand() % 15);
+        mvwprintw(win, fY, fX, "F");
+    }
+}
+
+void RenderField(){
+    initscr();
+    noecho();
+    curs_set(0);
+    win = newwin(height, width, 0, 0);
+    win2 =newwin(3,width,20,0);
+    box(win2,20,0);
+    box(win, 0, 0);
+    mvwprintw(win2, 1, 3, "Score: %d",score);
+    wrefresh(win);
+    wrefresh(win2);
+   
+}
+
+void GameUpdate(int &fX, int &fY){
 
 switch(sDir){
 case 97:
-    for(int i = X; i >= 0; i--){
-        snakeXmv--;
-        mvwprintw(win,Y,snakeXmv,"o");
-        mvwprintw(win,Y,snakeXmv+1," ");
-        wrefresh(win);
-        this_thread::sleep_for(chrono::milliseconds(1000));
-        if(sDir != 97){
-            break;}
-        }
-    
+        X--;
+        if (X <= 0)
+            gameover=true;
+        break;
 case 100:
-    for(int i = X; i <= 80; i++){
-        snakeXmv++;
-        mvwprintw(win,Y,snakeXmv,"o");
-        mvwprintw(win,Y,snakeXmv-1," ");
-        wrefresh(win);
-        this_thread::sleep_for(chrono::milliseconds(1000));
-        if(sDir != 100){
-            break;}
-        }
-    }
-
+        X++;
+         if (X >= 80)
+            gameover=true;
+        break;
+case 119:
+        Y--;
+         if (Y <= 0)
+            gameover=true;
+        break;
+case 115:
+        Y++;
+         if (Y >= 20)
+            gameover=true;
+        break;    
+}
+mvwprintw(win, Y, X, "o");
+fruit(fX, fY);
+wrefresh(win);
+this_thread::sleep_for(chrono::milliseconds(400));
 }
 
 int main(){
+int tmpv;
+int fX;
+int fY;
 start();
 
+
 while(!gameover){
-    UserInput(sDir);
-    //RenderField(win, height, width);
-    initscr();
-    noecho();
-    curs_set(0);
-    win = newwin(height, width, 0, 0);
-    refresh();
-    box(win, 0, 0);
-    mvwprintw(win,Y,snakeXmv,"o");
-    wrefresh(win);
-    GameUpdate(sDir, Y, snakeXmv, win);
-    //cout << snakeXmv << endl;
-    getch();
-    endwin();
+    UserInput(tmpv);
+    //printw("sDir: %d", sDir);
+    RenderField();
+    GameUpdate(fX,fY);
+    
+    
+    
+  
+
    
+    //cout << snakeXmv << endl; 
     
 }
+mvwprintw(win,Y,X-5,"GAME OVER");
+wrefresh(win);
+wgetch(win);
+endwin();
+
+//gover();
+
 
 
 return 0;
-    
-
 }
+
