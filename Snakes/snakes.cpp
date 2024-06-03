@@ -10,7 +10,8 @@ const int height = 20;
 int X = width/2;
 int Y = height/2;
 int sDir = 0;
-signed int score = -1;
+int score = -1;
+int var = 4;
 bool gameover;
 WINDOW * win;
 WINDOW * win2;
@@ -49,7 +50,7 @@ void gover(){
     win = newwin(height, width, 0, 0);
     refresh();
     box(win, 0, 0);
-    mvwprintw(win,Y,X-5,"GAME OVER");
+    mvwprintw(win,width/2,height/2,"GAME OVER");
     wrefresh(win);
     wgetch(win);
     endwin();
@@ -64,12 +65,14 @@ void UserInput(int tmpv) {
     }
 }
 
-void fruit(int fX, int fY){
+void fruit(int &fX, int &fY){ 
+    if (score != -1) {
+    mvwprintw(win, fY, fX, "F");
+  }
     if (score == -1 || (fX == X && fY == Y)){
         score++;
         fX = 3 + (rand() % 75);
         fY = 3 + (rand() % 15);
-        mvwprintw(win, fY, fX, "F");
     }
 }
 
@@ -81,9 +84,7 @@ void RenderField(){
     win2 =newwin(3,width,20,0);
     box(win2,20,0);
     box(win, 0, 0);
-    mvwprintw(win2, 1, 3, "Score: %d",score);
     wrefresh(win);
-    wrefresh(win2);
    
 }
 
@@ -112,7 +113,9 @@ case 115:
         break;    
 }
 mvwprintw(win, Y, X, "o");
+mvwprintw(win2, 1, 3, "Score: %d", score);
 fruit(fX, fY);
+wrefresh(win2);
 wrefresh(win);
 this_thread::sleep_for(chrono::milliseconds(400));
 }
@@ -129,21 +132,11 @@ while(!gameover){
     //printw("sDir: %d", sDir);
     RenderField();
     GameUpdate(fX,fY);
-    
-    
-    
-  
-
-   
+       
     //cout << snakeXmv << endl; 
     
 }
-mvwprintw(win,Y,X-5,"GAME OVER");
-wrefresh(win);
-wgetch(win);
-endwin();
-
-//gover();
+gover();
 
 
 
