@@ -18,30 +18,6 @@ int count = 0;
 bool gameover;
 WINDOW * win;
 WINDOW * win2;
-/*void draw(){
-//Change "clear" to "cls" if compiling for Windows
-    system("clear");
-for(int i=0; i<width; i++){
-    cout << "#";
-}
-cout << endl;
-for(int i=0; i<height; i++){
-    for(int j=0; j<width; j++){
-        if(j==0 || j==width-2){
-            cout<<"#";  
-        }
-        if(j==snakeX && i==snakeY)
-            cout<<"o";
-        else
-            cout<<" ";
-    }cout<<endl;
-}
-for(int i=0; i<width; i++){
-    cout << "#";
-}
-cout<<endl;
-}*/
-
 
 void start(){
     gameover=false;
